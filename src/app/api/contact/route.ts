@@ -6,28 +6,34 @@ export async function POST(req: Request) {
   try {
     const { name, email, phone, location, message, honeypot } = await req.json();
 
-    // Honeypot check
     if (honeypot) return NextResponse.json({ ok: true });
-
     if (!name || !email || !message) {
       return NextResponse.json({ ok: false, error: "Missing required fields" }, { status: 400 });
     }
 
-    // GoDaddy SMTP (adjust if you use 365/Google)
+    const host = process.env.SMTP_HOST || "smtp.office365.com"; // 365 default
+    const port = Number(process.env.SMTP_PORT || 587);
+    const user = process.env.SMTP_USER; // fayeq@...
+    const pass = process.env.SMTP_PASS; // mailbox/app password
+    const to = process.env.TO_EMAIL || "fayeq@salusconstruction.co.uk";
+    const from = process.env.FROM_EMAIL || `Salus Construction <${user}>`;
+
+    if (!user || !pass) {
+      console.error("SMTP creds missing");
+      return NextResponse.json({ ok: false, error: "Server email not configured" }, { status: 500 });
+    }
+
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtpout.secureserver.net",
-      port: Number(process.env.SMTP_PORT || 465),
-      secure: Number(process.env.SMTP_PORT || 465) === 465, // true for 465
-      auth: {
-        user: process.env.SMTP_USER, // e.g. info@salusconstruction.co.uk
-        pass: process.env.SMTP_PASS, // mailbox password / app password
-      },
+      host,
+      port,
+      secure: port === 465, // 465=SSL, 587=TLS
+      auth: { user, pass },
     });
 
     await transporter.sendMail({
-      from: `"Salus Construction" <${process.env.SMTP_USER}>`,
-      to: process.env.TO_EMAIL || "info@salusconstruction.co.uk",
-      replyTo: email,
+      from,             // "Salus Construction <fayeq@...>"
+      to,               // where you receive it
+      replyTo: email,   // visitor's email
       subject: `New Quote Request — ${name}`,
       html: `
         <h2>New Quote Request</h2>
