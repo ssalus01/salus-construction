@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import ContactForm from "@/components/ContactForm";
 
 // --- Company details ---
 const COMPANY = {
@@ -260,16 +261,7 @@ export default function Page() {
       <section id="contact" className="py-16 bg-slate-50">
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-2xl md:text-3xl font-bold">Request a Free Quote</h2>
-          <form className="mt-6 grid md:grid-cols-2 gap-4">
-            <input placeholder="Your Name" className="rounded-2xl border p-3" />
-            <input placeholder="Email" type="email" className="rounded-2xl border p-3" />
-            <input placeholder="Phone" className="rounded-2xl border p-3" />
-            <input placeholder="Postcode / Area" className="rounded-2xl border p-3" />
-            <textarea placeholder="Project details" className="md:col-span-2 rounded-2xl border p-3 min-h-[120px]" />
-            <div className="md:col-span-2">
-              <Button type="submit" className="rounded-2xl">Submit</Button>
-            </div>
-          </form>
+          <ContactForm />
         </div>
       </section>
     </div>
