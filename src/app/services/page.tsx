@@ -181,12 +181,12 @@ export default function ServicesPage() {
 
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Button asChild className="rounded-2xl">
-                    <a href="/#contact">
+                    <Link href="/#contact">
                       Request a Quote <ArrowRight className="ml-2 h-4 w-4" />
-                    </a>
+                    </Link>
                   </Button>
                   <Button asChild variant="secondary" className="rounded-2xl">
-                    <a href="/#about">About Us</a>
+                    <Link href="/#about">About Us</Link>
                   </Button>
                 </div>
               </div>
@@ -203,7 +203,7 @@ export default function ServicesPage() {
             <p className="text-slate-300">Free site visit and a fixed, itemised quote.</p>
           </div>
           <Button asChild size="lg" className="rounded-2xl">
-            <a href="/#contact">Book a Site Visit</a>
+            <Link href="/#contact">Book a Site Visit</Link>
           </Button>
         </div>
       </section>

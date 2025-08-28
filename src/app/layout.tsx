@@ -2,7 +2,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Shield, Phone, Mail, Hammer, ArrowRight } from "lucide-react";
+import { Shield, Phone, Mail, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -45,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         {/* Header */}
+        
         <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
           <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
             <div>
@@ -54,14 +55,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
             <nav className="hidden md:flex items-center gap-6 text-sm">
               <Link href="/">Home</Link>
-              <Link href="/services">Services</Link> 
-              <a href="/#process">Process</a>
-              <a href="/#about">About</a>
-              <a href="/#trust">Trust</a>
-              <a href="/#contact">Contact</a>
+              <Link href="/services">Services</Link>
+              <Link href="/#process">Process</Link>
+              <Link href="/#about">About</Link>
+              <Link href="/#trust">Trust</Link>
+              <Link href="/#contact">Contact</Link>
             </nav>
             <Button asChild className="rounded-2xl">
-              <a href="/#contact">Request a Quote <ArrowRight className="ml-2 h-4 w-4" /></a>
+              <Link href="/#contact">
+                Request a Quote <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
           </div>
         </header>

@@ -224,10 +224,10 @@ export default function Page() {
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-2xl md:text-3xl font-bold">About {COMPANY.name}</h2>
           <p className="mt-3 text-slate-600">
-          Fayeq Salus, the owner and director of the company, has over 30 years' experience in the
-      construction industry. The company, under his direction, has consistently focussed on London
-      and the surrounding area. He is intimately familiar with the needs in the sectors that the
-      company serves, and with the requirements of clients.
+            Fayeq Salus, the owner and director of the company, has over 30 years&rsquo; experience in the
+            construction industry. The company, under his direction, has consistently focussed on London
+            and the surrounding area. He is intimately familiar with the needs in the sectors that the
+            company serves, and with the requirements of clients.
           </p>
         </div>
       </section>
