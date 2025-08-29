@@ -18,16 +18,20 @@ export async function POST(req: Request) {
       );
     }
 
-    // 🔍 Debug environment variables
-    console.log("RESEND_API_KEY", process.env.RESEND_API_KEY ? "set" : "missing");
-    console.log("FROM_EMAIL", process.env.FROM_EMAIL);
-    console.log("TO_EMAIL", process.env.TO_EMAIL);
+    // Sanity check envs
+    if (!process.env.RESEND_API_KEY) {
+      console.error("Missing RESEND_API_KEY");
+      return NextResponse.json({ ok: false, error: "Server email not configured" }, { status: 500 });
+    }
 
     const resend = new Resend(process.env.RESEND_API_KEY);
+    const from = process.env.FROM_EMAIL || "onboarding@resend.dev";
+    const to = process.env.TO_EMAIL || "fayeq@salusconstruction.co.uk";
 
-    await resend.emails.send({
-      from: process.env.FROM_EMAIL || "onboarding@resend.dev",
-      to: process.env.TO_EMAIL || "fayeq@salusconstruction.co.uk",
+    // Call Resend and catch API-level errors
+    const { data, error } = await resend.emails.send({
+      from,
+      to,
       replyTo: email,
       subject: `New Quote Request — ${name}`,
       html: `
@@ -41,9 +45,16 @@ export async function POST(req: Request) {
       `,
     });
 
+    if (error) {
+      // This is the bit your current code was missing
+      console.error("Resend error:", error);
+      return NextResponse.json({ ok: false, error: "Email send failed" }, { status: 502 });
+    }
+
+    console.log("Resend message id:", data?.id);
     return NextResponse.json({ ok: true });
-  } catch (err) {
-    console.error("Contact form error:", err);
+  } catch (err: any) {
+    console.error("Contact form error:", err?.message || err);
     return NextResponse.json({ ok: false, error: "Email send failed" }, { status: 500 });
   }
 }
