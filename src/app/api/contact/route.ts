@@ -18,6 +18,11 @@ export async function POST(req: Request) {
       );
     }
 
+    // 🔍 Debug environment variables
+    console.log("RESEND_API_KEY", process.env.RESEND_API_KEY ? "set" : "missing");
+    console.log("FROM_EMAIL", process.env.FROM_EMAIL);
+    console.log("TO_EMAIL", process.env.TO_EMAIL);
+
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     await resend.emails.send({
