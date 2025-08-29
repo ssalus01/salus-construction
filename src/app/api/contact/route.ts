@@ -1,39 +1,29 @@
 // src/app/api/contact/route.ts
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+
+export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
     const { name, email, phone, location, message, honeypot } = await req.json();
 
+    // Honeypot (spam bot) check
     if (honeypot) return NextResponse.json({ ok: true });
+
     if (!name || !email || !message) {
-      return NextResponse.json({ ok: false, error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
-    const host = process.env.SMTP_HOST || "smtp.office365.com"; // 365 default
-    const port = Number(process.env.SMTP_PORT || 587);
-    const user = process.env.SMTP_USER; // fayeq@...
-    const pass = process.env.SMTP_PASS; // mailbox/app password
-    const to = process.env.TO_EMAIL || "fayeq@salusconstruction.co.uk";
-    const from = process.env.FROM_EMAIL || `Salus Construction <${user}>`;
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
-    if (!user || !pass) {
-      console.error("SMTP creds missing");
-      return NextResponse.json({ ok: false, error: "Server email not configured" }, { status: 500 });
-    }
-
-    const transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure: port === 465, // 465=SSL, 587=TLS
-      auth: { user, pass },
-    });
-
-    await transporter.sendMail({
-      from,             // "Salus Construction <fayeq@...>"
-      to,               // where you receive it
-      replyTo: email,   // visitor's email
+    await resend.emails.send({
+      from: process.env.FROM_EMAIL || "onboarding@resend.dev",
+      to: process.env.TO_EMAIL || "fayeq@salusconstruction.co.uk",
+      replyTo: email,
       subject: `New Quote Request — ${name}`,
       html: `
         <h2>New Quote Request</h2>
