@@ -4,19 +4,9 @@ import { Resend } from "resend";
 
 export const runtime = "nodejs";
 
-type ContactPayload = {
-  name: string;
-  email: string;
-  phone?: string;
-  location?: string;
-  message: string;
-  honeypot?: string;
-};
-
 export async function POST(req: Request) {
   try {
-    const { name, email, phone, location, message, honeypot } =
-      (await req.json()) as ContactPayload;
+    const { name, email, phone, location, message, honeypot } = await req.json();
 
     // Honeypot (spam bot) check
     if (honeypot) return NextResponse.json({ ok: true });
@@ -28,24 +18,12 @@ export async function POST(req: Request) {
       );
     }
 
-    // Ensure envs exist
-    if (!process.env.RESEND_API_KEY) {
-      console.error("Missing RESEND_API_KEY");
-      return NextResponse.json(
-        { ok: false, error: "Server email not configured" },
-        { status: 500 }
-      );
-    }
-
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const from = process.env.FROM_EMAIL || "onboarding@resend.dev";
-    const to = process.env.TO_EMAIL || "fayeq@salusconstruction.co.uk";
 
-    // Resend SDK returns { data, error }
-    const { data, error } = await resend.emails.send({
-      from,
-      to,
-      replyTo: email,
+    await resend.emails.send({
+      from: "onboarding@resend.dev",   // ✅ Sandbox sender
+      to: "fayeq@salusconstruction.co.uk", // ✅ Where submissions land
+      replyTo: email, // So you can hit reply and contact them directly
       subject: `New Quote Request — ${name}`,
       html: `
         <h2>New Quote Request</h2>
@@ -58,23 +36,12 @@ export async function POST(req: Request) {
       `,
     });
 
-    if (error) {
-      console.error("Resend error:", error);
-      return NextResponse.json({ ok: false, error: "Email send failed" }, { status: 502 });
-    }
-
-    // Optional: log the message id for debugging
-    if (data?.id) console.log("Resend message id:", data.id);
-
     return NextResponse.json({ ok: true });
-  } catch (err: unknown) {
-    const msg =
-      err instanceof Error
-        ? err.message
-        : typeof err === "string"
-        ? err
-        : JSON.stringify(err);
-    console.error("Contact form error:", msg);
-    return NextResponse.json({ ok: false, error: "Email send failed" }, { status: 500 });
+  } catch (err) {
+    console.error("Contact form error:", err);
+    return NextResponse.json(
+      { ok: false, error: "Email send failed" },
+      { status: 500 }
+    );
   }
 }
