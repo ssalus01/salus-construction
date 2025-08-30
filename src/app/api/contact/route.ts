@@ -4,9 +4,19 @@ import { Resend } from "resend";
 
 export const runtime = "nodejs";
 
+type ContactPayload = {
+  name: string;
+  email: string;
+  phone?: string;
+  location?: string;
+  message: string;
+  honeypot?: string;
+};
+
 export async function POST(req: Request) {
   try {
-    const { name, email, phone, location, message, honeypot } = await req.json();
+    const { name, email, phone, location, message, honeypot } =
+      (await req.json()) as ContactPayload;
 
     // Honeypot (spam bot) check
     if (honeypot) return NextResponse.json({ ok: true });
@@ -18,17 +28,20 @@ export async function POST(req: Request) {
       );
     }
 
-    // Sanity check envs
+    // Ensure envs exist
     if (!process.env.RESEND_API_KEY) {
       console.error("Missing RESEND_API_KEY");
-      return NextResponse.json({ ok: false, error: "Server email not configured" }, { status: 500 });
+      return NextResponse.json(
+        { ok: false, error: "Server email not configured" },
+        { status: 500 }
+      );
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY);
     const from = process.env.FROM_EMAIL || "onboarding@resend.dev";
     const to = process.env.TO_EMAIL || "fayeq@salusconstruction.co.uk";
 
-    // Call Resend and catch API-level errors
+    // Resend SDK returns { data, error }
     const { data, error } = await resend.emails.send({
       from,
       to,
@@ -46,15 +59,22 @@ export async function POST(req: Request) {
     });
 
     if (error) {
-      // This is the bit your current code was missing
       console.error("Resend error:", error);
       return NextResponse.json({ ok: false, error: "Email send failed" }, { status: 502 });
     }
 
-    console.log("Resend message id:", data?.id);
+    // Optional: log the message id for debugging
+    if (data?.id) console.log("Resend message id:", data.id);
+
     return NextResponse.json({ ok: true });
-  } catch (err: any) {
-    console.error("Contact form error:", err?.message || err);
+  } catch (err: unknown) {
+    const msg =
+      err instanceof Error
+        ? err.message
+        : typeof err === "string"
+        ? err
+        : JSON.stringify(err);
+    console.error("Contact form error:", msg);
     return NextResponse.json({ ok: false, error: "Email send failed" }, { status: 500 });
   }
 }
