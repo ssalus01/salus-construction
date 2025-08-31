@@ -2,9 +2,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Shield, Phone, Mail, ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Shield, Phone, Mail } from "lucide-react";
+import SiteHeader from "@/components/SiteHeader"; // ⬅️ add this
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +19,7 @@ const COMPANY = {
   email: "info@salusconstruction.co.uk",
   address: "London, UK",
   founded: "1990",
-  companyNo: "10902774", // 👈 add this line
+  companyNo: "10902774",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -44,30 +43,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </div>
 
-        {/* Header */}
-        
-        <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
-          <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-            <div>
-              <span className="font-bold text-lg md:text-xl tracking-wide">
-                {COMPANY.name}
-              </span>
-            </div>
-            <nav className="hidden md:flex items-center gap-6 text-sm">
-              <Link href="/">Home</Link>
-              <Link href="/services">Services</Link>
-              <Link href="/#process">Process</Link>
-              <Link href="/#about">About</Link>
-              <Link href="/#trust">Trust</Link>
-              <Link href="/#contact">Contact</Link>
-            </nav>
-            <Button asChild className="rounded-2xl">
-              <Link href="/#contact">
-                Request a Quote <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </header>
+        {/* Header (now mobile-friendly) */}
+        <SiteHeader companyName={COMPANY.name} />
 
         {/* Page Content */}
         <main>{children}</main>
@@ -75,7 +52,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Footer */}
         <footer className="border-t bg-slate-50">
           <div className="mx-auto max-w-6xl px-4 py-8 flex flex-col md:flex-row justify-between text-sm text-slate-600 gap-6">
-            {/* Left */}
             <div>
               <p className="font-semibold">{COMPANY.name}</p>
               <p>
@@ -86,8 +62,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 NW10 6RF
               </p>
             </div>
-
-            {/* Right */}
             <div className="flex flex-col md:items-end gap-2">
               <a href={`tel:${COMPANY.phoneHref}`}>{COMPANY.phone}</a>
               <a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a>
