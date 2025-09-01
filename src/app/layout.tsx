@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Shield, Phone, Mail } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader"; // ⬅️ add this
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,21 @@ const COMPANY = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        {/* Google Analytics */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-W4PWNZY7XM"
+        />
+        <Script id="google-analytics">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-W4PWNZY7XM');
+          `}
+        </Script>
+      </head>
       <body className={inter.className}>
         {/* Top Bar */}
         <div className="w-full bg-slate-900 text-white">
