@@ -25,7 +25,7 @@ const PROJECTS: Project[] = [
   },
   {
     id: "west-hampstead",
-    title: "Full House Refurbishment — West Hampstead",
+    title: "Full House Refurbishment — Hampstead",
     cover: "/projects/west-hampstead/cover.jpg",
     images: [
         "/projects/west-hampstead/cover.jpg",
