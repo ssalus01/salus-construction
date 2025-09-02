@@ -13,6 +13,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ContactForm from "@/components/ContactForm";
+import ProjectsSection from "@/components/ProjectsSection";
 
 // --- Company details ---
 const COMPANY = {
@@ -219,6 +220,10 @@ export default function Page() {
           </div>
         </div>
       </section>
+      
+      {/* Recent Projects */}
+      
+      <ProjectsSection />
 
       {/* About */}
       <section id="about" className="py-16 bg-slate-50">
