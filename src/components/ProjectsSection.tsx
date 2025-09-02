@@ -27,7 +27,14 @@ const PROJECTS: Project[] = [
     id: "west-hampstead",
     title: "Full House Refurbishment — West Hampstead",
     cover: "/projects/west-hampstead/cover.jpg",
-    images: ["/projects/west-hampstead/cover.jpg"],
+    images: [
+        "/projects/west-hampstead/cover.jpg",
+        "/projects/west-hampstead/hampstead-1.jpg",
+        "/projects/west-hampstead/hampstead-2.jpg",
+        "/projects/west-hampstead/hampstead-3.jpg",
+        "/projects/west-hampstead/hampstead-4.jpg",
+        "/projects/west-hampstead/hampstead-5.jpg",
+    ],
   },
   {
     id: "holland-park",
